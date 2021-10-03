@@ -12,6 +12,7 @@ type AccessTokenClaims struct {
 	Permission []string `json:"permission"`
 	Type       string   `json:"type"`
 	UserID     string   `json:"user_id"`
+	VerifyCode string   `json:"verify_code"`
 }
 
 func Decode(refreshToken string, config *config.Config) (AccessTokenClaims, error) {

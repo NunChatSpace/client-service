@@ -2,9 +2,10 @@ package actor
 
 import (
 	"context"
-	"strings"
+	"net/http"
 
 	"github.com/NunChatSpace/client-service/config"
+	idservice "github.com/NunChatSpace/client-service/internal/sdk/id_service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,12 +24,21 @@ func Handler(config *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenHeader := c.Request.Header["Authorization"]
 		if len(tokenHeader) == 0 {
-			ctx := context.WithValue(c.Request.Context(), &actorContext{}, Model{})
-			c.Request = c.Request.WithContext(ctx)
-			c.Next()
+			c.String(http.StatusForbidden, "unauthenticate")
+			c.AbortWithStatus(http.StatusForbidden)
+			return
 		} else {
-			token := strings.Split(tokenHeader[0], " ")[1]
-			actor := GetActorFromToken(token, config)
+			result := idservice.VerifyToken(config, tokenHeader[0])
+			if result.UserID == "" {
+				c.String(http.StatusForbidden, "unauthenticate")
+				c.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+			actor := Model{
+				UserID:     result.UserID,
+				Permission: result.Permission,
+			}
+
 			ctx := context.WithValue(c.Request.Context(), &actorContext{}, actor)
 			c.Request = c.Request.WithContext(ctx)
 			c.Next()
