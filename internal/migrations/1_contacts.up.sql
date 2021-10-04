@@ -3,7 +3,7 @@ CREATE TABLE "contacts" (
     "created_at"                timestamptz NOT NULL,
     "updated_at"                timestamptz NOT NULL,
     "deleted_at"                timestamptz,
-    "tel"                       text        NOT NULL,
+    "phone_number"              text        NOT NULL,
     "address"                   text        NOT NULL,
     "email"                     text        NOT NULL,
 

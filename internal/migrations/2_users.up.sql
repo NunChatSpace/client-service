@@ -3,7 +3,9 @@ CREATE TABLE "users" (
     "created_at"                timestamptz NOT NULL,
     "updated_at"                timestamptz NOT NULL,
     "deleted_at"                timestamptz,
-    "name"                      text        NOT NULL,
+    "first_name"                text        NOT NULL,
+    "middle_name"               text        NOT NULL,
+    "last_name"                 text        NOT NULL,
     "type"                      text        NOT NULL,
     "contact_id"                text        NOT NULL,
 

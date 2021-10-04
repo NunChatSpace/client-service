@@ -38,12 +38,9 @@ func (d Db) Ping() error {
 }
 
 type DB interface {
-	ActionAllow() ActionAllowInterface
-	Consent() ConsentInterface
+	Cattle() CattleInterface
+	Farm() FarmInterface
 	Contact() ContactInterface
-	Permission() PermissionInterface
-	Role() RoleInterface
-	RoleName() RoleNameInterface
 	User() UserInterface
 }
 

@@ -15,14 +15,10 @@ type UserRegisterModel struct {
 	PhoneNumber string `json:"phone_number"`
 	Email       string `json:"email"`
 	Address     string `json:"address"`
+	Type        string `json:"type"`
 }
 
 func Register(db entities.DB, model UserRegisterModel) (response_wrapper.Model, error) {
-	rolename, err := db.RoleName().Get("user")
-	if err != nil {
-		return deliveries.InternalError(UserRegisterModel{}, err)
-	}
-
 	cinfo := entities.ContactModel{
 		Email:       model.Email,
 		PhoneNumber: model.PhoneNumber,
@@ -37,8 +33,8 @@ func Register(db entities.DB, model UserRegisterModel) (response_wrapper.Model, 
 		FirstName:  model.FirstName,
 		MiddleName: model.MiddleName,
 		LastName:   model.LastName,
+		Type:       model.Type,
 		ContactID:  contact.ID,
-		RoleNameID: rolename.ID,
 	}
 
 	_, err = db.User().Add(uinfo)
