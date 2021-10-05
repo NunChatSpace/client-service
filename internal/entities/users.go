@@ -24,6 +24,7 @@ type UserModel struct {
 	LastName   string `json:"last_name"`
 	Type       string `json:"type"`
 	ContactID  string `json:"contact_id"`
+	CitizenID  string `json:"citizen_id"`
 }
 
 func (UserModel) TableName() string {

@@ -14,12 +14,10 @@ CREATE TABLE "cattles" (
     "weaning_weight"            INT         NOT NULL,
     "build_number"              text        NOT NULL,
     "breeder_id"                text        NOT NULL,
-    "contact_id"                text        NOT NULL,
     "owner_id"                  text        NOT NULL,
 
     PRIMARY KEY("id"),
     CONSTRAINT "fk_cattles_cattles"     FOREIGN KEY("breeder_id")   REFERENCES "cattles" ("id")     ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "fk_cattles_contacts"    FOREIGN KEY("contact_id")   REFERENCES "contacts" ("id")    ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "fk_cattles_users"       FOREIGN KEY("owner_id")     REFERENCES "users" ("id")       ON DELETE CASCADE ON UPDATE CASCADE
 );
 

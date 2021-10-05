@@ -12,7 +12,9 @@ type cattleDb struct {
 
 type CattleInterface interface {
 	Add(info CattleModel) (CattleModel, error)
+	AddMany(infos []CattleModel) (int, error)
 	Get(id string) (CattleModel, error)
+	GetByNames(names []string) ([]CattleModel, error)
 }
 
 type CattleModel struct {
@@ -28,7 +30,6 @@ type CattleModel struct {
 	WeaningWeight string `json:"weaning_weight"`
 	BuildNumber   string `json:"build_number"`
 	BreederID     string `json:"breeder_id"`
-	ContactID     string `json:"contact_id"`
 	OwnerID       string `json:"owner_id"`
 }
 
@@ -42,9 +43,22 @@ func (cdb cattleDb) Add(info CattleModel) (CattleModel, error) {
 	return info, tx.Error
 }
 
+func (cdb cattleDb) AddMany(infos []CattleModel) (int, error) {
+	tx := cdb.gorm.Create(&infos)
+
+	return int(tx.RowsAffected), tx.Error
+}
+
 func (cdb cattleDb) Get(id string) (CattleModel, error) {
 	cattle := CattleModel{}
 	cdb.gorm.Find(&cattle, "id = ?", id)
 
 	return cattle, nil
+}
+
+func (cdb cattleDb) GetByNames(names []string) ([]CattleModel, error) {
+	cattles := []CattleModel{}
+	cdb.gorm.Find(&cattles, "animal_name IN ?", names)
+
+	return cattles, nil
 }
