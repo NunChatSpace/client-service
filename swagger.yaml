@@ -17,7 +17,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/RegisterModel'
+              $ref: '#/components/schemas/RegisterUserBody'
         required: true
       responses:
         '200':
@@ -25,7 +25,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/TokenSuccessResponse'
+                $ref: '#/components/schemas/RegisterSuccesResponse'
         '500':
           description: internal server error
           content:
@@ -33,65 +33,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       x-codegen-request-body-name: body
-  /tokens/refresh:
+  /cattles/:
     post:
       security:
         - bearerAuth: []
       summary: Refresh access token
-      responses:
-        '200':
-          description: success
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/TokenSuccessResponse'
-        '403':
-          description: forbidden
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /tokens/intrspct:
-    post:
-      security:
-        - bearerAuth: []
-      summary: Decode token
-      responses:
-        '202':
-          description: accept
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/IntrospectionSuccessResult'
-        '403':
-          description: forbidden
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /users/:
-    post:
-      security:
-        - bearerAuth: []
-      summary: Register user
       requestBody:
-        description: Signin information
+        description: Register information
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/RegisterUserBody'
+              $ref: '#/components/schemas/CattlesPostBody'
         required: true
       responses:
         '200':
@@ -99,7 +51,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/IntrospectionSuccessResult'
+                $ref: '#/components/schemas/CattlesPostSuccessResponse'
         '403':
           description: forbidden
           content:
@@ -112,13 +64,39 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
-    TokenSuccessResponse:
+    RegisterSuccesResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/TokenSuccessResponse_data'
+          type: object
+          properties:
+            citizen_id:
+              type: string
+              example: '1345678901234'
+            first_name:
+              type: string
+              example: 'Albert'
+            middle_name:
+              type: string
+              example: 'E.'
+            last_name:
+              type: string
+              example: 'Something'
+            phone_number:
+              type: string
+              example: '0811111111'
+            email:
+              type: string
+              example: 'emal@email.com'
+            address:
+              type: string
+              example: 'Poserdon 123 Rd.Ratchadaphisek Thailand'
+            type:
+              type: string
+              example: 'farmer'
         message:
           type: string
           example: ''
@@ -126,89 +104,97 @@ components:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/ErrorResponse_data'
+          type: object
         message:
           type: string
           example: '{error message}'
-    RegisterModel:
-      type: object
-      properties:
-        Email:
-          type: string
-          example: abc@abc.com
-        Password:
-          type: string
-          example: '1234'
-    IntrospectionSuccessResult:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/IntrospectionSuccessResult_data'
-        message:
-          type: string
-          example: ''
     RegisterUserBody:
       type: object
       properties:
-        FirstName:
+        citizen_id:
+          type: string
+          example: '1345678901234'
+        first_name:
           type: string
           example: 'Albert'
-        MiddleName:
+        middle_name:
           type: string
           example: 'E.'
-        LastName:
+        last_name:
           type: string
           example: 'Something'
-        Password:
-          type: string
-          example: '1234'
-        PhoneNumber:
+        phone_number:
           type: string
           example: '0811111111'
-        Email:
+        email:
           type: string
           example: 'emal@email.com'
-        Address:
+        address:
           type: string
           example: 'Poserdon 123 Rd.Ratchadaphisek Thailand'
-    TokenSuccessResponse_data:
-      type: object
-      properties:
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzMwNzUwMDYsInBlcm1pc3Npb24iOm51bGwsInR5cGUiOiJ1c2VyX2FjY2VzcyIsInVzZXJfaWQiOiIxNjNENzFGQy0yNTVDLTQ2MEQtQTEzMi1GRTQ3RDhFM0IyRUQifQ.SG1r3SfzuHI5-URyHI5Rjshl2SLBBEAuPdQqIjpn-TE
-        refresh_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzMwNzUwMDYsInBlcm1pc3Npb24iOm51bGwsInR5cGUiOiJ1c2VyX2FjY2VzcyIsInVzZXJfaWQiOiIxNjNENzFGQy0yNTVDLTQ2MEQtQTEzMi1GRTQ3RDhFM0IyRUQifQ.SG1r3SfzuHI5-URyHI5Rjshl2SLBBEAuPdQqIjpn-TE
-    ErrorResponse_data:
-      type: object
-      properties:
-        access_token:
-          type: string
-          example: ''
-        refresh_token:
-          type: string
-          example: ''
-    IntrospectionSuccessResult_data:
-      type: object
-      properties:
-        exp:
-          type: integer
-          example: 1633082822
-        permission:
-          type: array
-          items:
-            type: string
-            example: ''
         type:
           type: string
-          example: user_access
-        user_id:
+          example: 'farmer'
+    CattlesPostBody:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            owner_citizen_id:
+              type: string
+              example: "1345678902345"
+            cattles:
+              type: array
+              items:
+               $ref: '#/components/schemas/CattlesModel'
+        message:
           type: string
-          example: DCB91C39-9AB2-49A6-A6AB-5A2C5C69DA08
-        verify_code:
+          example: ""
+    CattlesPostSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
           type: string
-          example: 26B62860-13D5-4292-AEE3-F86F59C57D7D
+          example: ""
+    CattlesModel:
+      type: object
+      properties:
+        animal_name:
+          type: string
+          example: "บักสมหมาย"
+        device_id:
+          type: string
+          example: "0412384595"
+        birth_date:
+          type: string
+          example: "2019-10-12T07:20:00.00Z"
+        sex:
+          type: string
+          example: "Male"
+        color:
+          type: string
+          example: "Red"
+        breed:
+          type: string
+          example: "พันธุ์อีหยัง"
+        birth_weight:
+          type: string
+          example: "100"
+        chest:
+          type: string
+          example: "100"
+        weaning_weight:
+          type: string
+          example: "150"
+        build_number:
+          type: string
+          example: "12344455"
+        breeder_name:
+          type: string
+          example: "สมชาย"
   securitySchemes:
     bearerAuth:
       type: http
