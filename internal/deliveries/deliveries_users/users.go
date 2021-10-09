@@ -9,6 +9,7 @@ import (
 )
 
 type UserRegisterModel struct {
+	CitizenID   string `json:"citizen_id"`
 	FirstName   string `json:"first_name"`
 	MiddleName  string `json:"middle_name"`
 	LastName    string `json:"last_name"`
@@ -30,6 +31,7 @@ func Register(db entities.DB, model UserRegisterModel) (response_wrapper.Model, 
 	}
 
 	uinfo := entities.UserModel{
+		CitizenID:  model.CitizenID,
 		FirstName:  model.FirstName,
 		MiddleName: model.MiddleName,
 		LastName:   model.LastName,

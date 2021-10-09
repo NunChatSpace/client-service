@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/NunChatSpace/client-service/http/handlers/database"
-	du "github.com/NunChatSpace/client-service/internal/deliveries/deliveries_users"
+	dc "github.com/NunChatSpace/client-service/internal/deliveries/deliveries_cattles"
 	"github.com/NunChatSpace/client-service/internal/response_wrapper"
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ func AddGroup(r *gin.Engine) {
 }
 
 func add(c *gin.Context) {
-	var regisModel du.UserRegisterModel
+	var regisModel dc.CattlesRegisterModel
 
 	err := json.NewDecoder(c.Request.Body).Decode(&regisModel)
 	if err != nil {
@@ -30,7 +30,7 @@ func add(c *gin.Context) {
 		return
 	}
 
-	m, err := du.Register(db, regisModel)
+	m, err := dc.AddCattles(db, regisModel)
 	if err != nil {
 		response_wrapper.Resp(m.ErrorCode, m.Data, err.Error(), c)
 		return

@@ -1,0 +1,219 @@
+openapi: 3.0.1
+info:
+  title: Farm service
+  description: APIs schema for Farm service
+  version: 1.0.0
+servers:
+  - url: 'https://backend.aistrom.com:8001'
+security:
+  - basicAuth: []
+  - bearerAuth: []
+paths:
+  /users/:
+    post:
+      summary: Register user
+      requestBody:
+        description: Register information
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RegisterModel'
+        required: true
+      responses:
+        '200':
+          description: success response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenSuccessResponse'
+        '500':
+          description: internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: body
+  /tokens/refresh:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Refresh access token
+      responses:
+        '200':
+          description: success
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenSuccessResponse'
+        '403':
+          description: forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /tokens/intrspct:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Decode token
+      responses:
+        '202':
+          description: accept
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntrospectionSuccessResult'
+        '403':
+          description: forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Register user
+      requestBody:
+        description: Signin information
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RegisterUserBody'
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntrospectionSuccessResult'
+        '403':
+          description: forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    TokenSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TokenSuccessResponse_data'
+        message:
+          type: string
+          example: ''
+    ErrorResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ErrorResponse_data'
+        message:
+          type: string
+          example: '{error message}'
+    RegisterModel:
+      type: object
+      properties:
+        Email:
+          type: string
+          example: abc@abc.com
+        Password:
+          type: string
+          example: '1234'
+    IntrospectionSuccessResult:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/IntrospectionSuccessResult_data'
+        message:
+          type: string
+          example: ''
+    RegisterUserBody:
+      type: object
+      properties:
+        FirstName:
+          type: string
+          example: 'Albert'
+        MiddleName:
+          type: string
+          example: 'E.'
+        LastName:
+          type: string
+          example: 'Something'
+        Password:
+          type: string
+          example: '1234'
+        PhoneNumber:
+          type: string
+          example: '0811111111'
+        Email:
+          type: string
+          example: 'emal@email.com'
+        Address:
+          type: string
+          example: 'Poserdon 123 Rd.Ratchadaphisek Thailand'
+    TokenSuccessResponse_data:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzMwNzUwMDYsInBlcm1pc3Npb24iOm51bGwsInR5cGUiOiJ1c2VyX2FjY2VzcyIsInVzZXJfaWQiOiIxNjNENzFGQy0yNTVDLTQ2MEQtQTEzMi1GRTQ3RDhFM0IyRUQifQ.SG1r3SfzuHI5-URyHI5Rjshl2SLBBEAuPdQqIjpn-TE
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzMwNzUwMDYsInBlcm1pc3Npb24iOm51bGwsInR5cGUiOiJ1c2VyX2FjY2VzcyIsInVzZXJfaWQiOiIxNjNENzFGQy0yNTVDLTQ2MEQtQTEzMi1GRTQ3RDhFM0IyRUQifQ.SG1r3SfzuHI5-URyHI5Rjshl2SLBBEAuPdQqIjpn-TE
+    ErrorResponse_data:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: ''
+        refresh_token:
+          type: string
+          example: ''
+    IntrospectionSuccessResult_data:
+      type: object
+      properties:
+        exp:
+          type: integer
+          example: 1633082822
+        permission:
+          type: array
+          items:
+            type: string
+            example: ''
+        type:
+          type: string
+          example: user_access
+        user_id:
+          type: string
+          example: DCB91C39-9AB2-49A6-A6AB-5A2C5C69DA08
+        verify_code:
+          type: string
+          example: 26B62860-13D5-4292-AEE3-F86F59C57D7D
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    basicAuth:
+      type: http
+      scheme: basic

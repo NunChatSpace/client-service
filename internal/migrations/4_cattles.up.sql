@@ -13,7 +13,7 @@ CREATE TABLE "cattles" (
     "chest"                     INT         NOT NULL,
     "weaning_weight"            INT         NOT NULL,
     "build_number"              text        NOT NULL,
-    "breeder_id"                text        NOT NULL,
+    "breeder_id"                text,
     "owner_id"                  text        NOT NULL,
 
     PRIMARY KEY("id"),
